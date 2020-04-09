@@ -14,7 +14,7 @@ class FCMService {
   };
 
   checkPermission = onRegister => {
-    firebase    
+    firebase
       .messaging()
       .hasPermission()
       .then(enable => {
@@ -27,8 +27,9 @@ class FCMService {
         }
       })
       .catch(error => {
+        //console.log('aaaa')
         console.log('Permission rejected', error);
-        console.log(aaaaa)
+        //console.log(aaaaa);
       });
   };
 
@@ -85,7 +86,11 @@ class FCMService {
     this.notificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened((notificationOpen: NotificationOpen) => {
-        onOpenNotification(notification);
+        if (notificationOpen) {
+          const notification: Notification = notificationOpen.notification;
+          onOpenNotification(notification);
+          this.removeDeliveredNotification(notification)
+        }
       });
 
     //If your app is closed, you can check if it was opened by a notification
@@ -97,6 +102,8 @@ class FCMService {
         if (notificationOpen) {
           const notification: Notification = notificationOpen.notification;
           onOpenNotification(notification);
+          this.removeDeliveredNotification(notification)
+
         }
       });
     // Triggered for data only payload in foreground
@@ -121,9 +128,9 @@ class FCMService {
     this.onTokenRefreshListener();
   };
 
-  buildHandle = obj => {
+  buildChannel = obj => {
     return new firebase.notifications.Android.Channel(
-      obj.channelID,
+      obj.channelId,
       obj.channelName,
       firebase.notifications.Android.Importance.High,
     ).setDescription(obj.channelDes);
@@ -141,9 +148,9 @@ class FCMService {
         .setTitle(obj.title)
         .setBody(obj.content)
         //For Android
-        .android.setChannelId(obj.channel.channelID)
+        .android.setChannelId(obj.channel.channelId)
         .android.setLargeIcon(obj.largeIcon) //Create this icon in Android Studio (app/res/mipmap)
-        .android.setSmallIcon(obj.smallIcon) //Create this icon in Android Studio (app/res/mipmap)
+        .android.setSmallIcon(obj.smallIcon) //Create this icon in Android Studio (app/res/drawable)
         .android.setColor(obj.colorBgIcon)
         .android.setPriority(firebase.notifications.Android.Priority.High)
         .android.setVibrate(obj.vibrate)
@@ -177,4 +184,4 @@ class FCMService {
       .removeDeliveredNotification(notification.notificationId);
   };
 }
-export default FCMService
+export default FCMService;
