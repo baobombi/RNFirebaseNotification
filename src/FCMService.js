@@ -18,7 +18,7 @@ class FCMService {
       .messaging()
       .hasPermission()
       .then(enable => {
-        if (enabled) {
+        if (enable) {
           //User has permission
           this.getToken(onRegister);
         } else {

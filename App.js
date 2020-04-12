@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Alert} from 'react-native';
 import FCMService from './src/FCMService';
 var fcmNotification = new FCMService();
 
@@ -11,16 +11,16 @@ const App = () => {
   const onNotification = notify => {
     console.log('[NotificationFCM] onNotification', notify);
     //Handle push notification
-    
+
     const channelObj = {
       channelId: 'SampleChannelID',
       channelName: 'SampleChannelName',
       channelDes: 'SampleChannelDes',
     };
-    const channel = fcmNotification.buildChannel(ChannelObj);
+    const channel = fcmNotification.buildChannel(channelObj);
 
     const buildNotify = {
-      dataId: notification._notificationId,
+      dataId: notify.notificationId,
       title: notify._title,
       content: notify._body,
       sound: 'default',
@@ -37,7 +37,7 @@ const App = () => {
 
   const onOpenNotification = notify => {
     console.log('[NotificationFCM] onOpenNotification', notify);
-    arlet('Open Notification:  ', notify._body)
+    alert('Open Notification: ' + notify._body);
   };
 
   useEffect(() => {
